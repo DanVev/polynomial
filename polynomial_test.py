@@ -9,7 +9,7 @@ class Polynomial_test(unittest.TestCase):
         self.c = Polynomial([0, 2, -1])
 
     def test_init(self):
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(ValueError):
             Polynomial([])
         self.assertEqual(Polynomial([1, 2, 3]).coeffs, [1, 2, 3])
         self.assertEqual(Polynomial([-3, 0]).coeffs, [-3, 0])
@@ -29,15 +29,16 @@ class Polynomial_test(unittest.TestCase):
         self.assertTrue(self.b != self.c)
 
     def test_add(self):
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(TypeError):
             self.a + " "
         self.assertEqual((self.a + 1).coeffs, [1, 2, 4])
+        self.assertEqual((1 + self.a).coeffs, [1, 2, 4])
         self.assertEqual((self.a + self.b).coeffs, [1, -1, 3])
         self.assertEqual((self.b + self.c).coeffs, [-1, -1])
         self.assertEqual((self.b + Polynomial([3, 3])).coeffs, [3])
 
     def test_mul(self):
-        with self.assertRaises(AssertionError):
+        with self.assertRaises(TypeError):
             self.a * " "
         self.assertEqual(-1 * self.a, self.a * -1)
         self.assertEqual((-1 * self.a).coeffs, [-1, -2, -3])
@@ -53,3 +54,4 @@ class Polynomial_test(unittest.TestCase):
         self.assertEqual(str(self.a), "x^2+2x+3")
         self.assertEqual(str(self.b), "-3x")
         self.assertEqual(str(self.c), "2x-1")
+        self.assertEqual(str(Polynomial([0])), "0")

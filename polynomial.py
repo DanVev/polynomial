@@ -4,7 +4,8 @@ from copy import copy
 class Polynomial:
     def __init__(self, coeffs):
         self.coeffs = copy(coeffs)
-        assert len(coeffs) != 0
+        if len(coeffs) == 0:
+            raise ValueError("List of coefficients is empty")
         while self.coeffs[0] == 0 and len(self.coeffs) > 1:
             self.coeffs.pop(0)
 
@@ -12,20 +13,23 @@ class Polynomial:
         return len(self.coeffs)
 
     def __add__(self, other):
-        assert isinstance(other, (Polynomial, int))
         if isinstance(other, int):
             coeffs = copy(self.coeffs)
             coeffs[-1] += other
             return Polynomial(coeffs)
-        else:
+        elif isinstance(other, Polynomial):
             l_pol, s_pol = (self, other) if len(self) >= len(other) else (other, self)
             coeffs = list(copy(l_pol.coeffs))
             for i in range(1, len(s_pol) + 1):
                 coeffs[-i] += s_pol.coeffs[-i]
             return Polynomial(coeffs)
+        else:
+            raise TypeError("Unsupported operand type")
+
+    def __radd__(self, other):
+        return self + other
 
     def __mul__(self, other):
-        assert isinstance(other, (Polynomial, int))
         coeffs = []
         if isinstance(other, int):
             assert other != 0
@@ -38,15 +42,19 @@ class Polynomial:
                 for j, x2 in enumerate(other.coeffs):
                     coeffs[i + j] += x1 * x2
             return Polynomial(coeffs)
+        else:
+            raise TypeError("Unsupported operand type")
 
     __rmul__ = __mul__
 
     def __sub__(self, other):
-        assert isinstance(other, (Polynomial, int))
+        if not isinstance(other, (Polynomial, int)):
+            raise TypeError("Unsupported operand type")
         return self + (-1 * other)
 
     def __eq__(self, other):
-        assert isinstance(other, Polynomial)
+        if not isinstance(other, Polynomial):
+            raise TypeError("Unsupported operand type")
         if len(self) != len(other):
             return False
         else:
@@ -67,6 +75,9 @@ class Polynomial:
                 else:
                     result.append(("+" if c > 0 else "-") + (
                         str(abs(c)) if (abs(c) != 1) else "") + "x^" + str(i))
-        if result[-1][0] == "+":
-            result[-1] = result[-1][1:]
+        if r_coeffs != [0]:
+            if result[-1][0] == "+":
+                result[-1] = result[-1][1:]
+        else:
+            return "0"
         return "".join(reversed(result))
