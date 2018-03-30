@@ -25,6 +25,8 @@ class Polynomial_test(unittest.TestCase):
         self.assertFalse(self.a == self.c)
 
     def test_not_eq(self):
+        with self.assertRaises(TypeError):
+            self.a == " "
         self.assertFalse(self.a != self.a)
         self.assertTrue(self.b != self.c)
 
@@ -46,6 +48,8 @@ class Polynomial_test(unittest.TestCase):
         self.assertEqual((self.b * self.c).coeffs, [-6, 3, 0])
 
     def test_sub(self):
+        with self.assertRaises(TypeError):
+            self.a - " "
         self.assertEqual((self.a - 1).coeffs, [1, 2, 2])
         self.assertEqual((self.a - self.b).coeffs, [1, 5, 3])
         self.assertEqual((self.b - self.c).coeffs, [-5, 1])
