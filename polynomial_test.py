@@ -59,3 +59,26 @@ class Polynomial_test(unittest.TestCase):
         self.assertEqual(str(self.b), "-3x")
         self.assertEqual(str(self.c), "2x-1")
         self.assertEqual(str(Polynomial([0])), "0")
+
+    def test_input_fails(self):
+        with self.assertRaises(ValueError):
+            p = Polynomial([])
+        with self.assertRaises(ValueError):
+            p = Polynomial('abc')
+            c = p + 1
+        with self.assertRaises(ValueError):
+            p = Polynomial((1.0, 1.3))
+
+        with self.assertRaises(ValueError):
+            p = Polynomial({1.0, 1.3})
+
+        with self.assertRaises(TypeError):
+            d = self.a + 'asb'
+        with self.assertRaises(TypeError):
+            e = 'asb' + self.a
+        with self.assertRaises(TypeError):
+            self.a * 'asdc'
+
+    def test_repr(self):
+        self.assertEqual(repr(self.a), 'Polynomial([1, 2, 3])')
+        self.assertEqual(repr(self.c), 'Polynomial([2, -1])')

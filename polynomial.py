@@ -3,9 +3,13 @@ from copy import copy
 
 class Polynomial:
     def __init__(self, coeffs):
-        self.coeffs = copy(coeffs)
         if len(coeffs) == 0:
             raise ValueError("List of coefficients is empty")
+        if not isinstance(coeffs, (list, tuple)):
+            raise ValueError('coeffs parameter must be a list or tuple.')
+        if not all(map(lambda x: isinstance(x, int), coeffs)):
+            raise ValueError("Incorrect input list. All values must be integers")
+        self.coeffs = copy(coeffs)
         while self.coeffs[0] == 0 and len(self.coeffs) > 1:
             self.coeffs.pop(0)
 
@@ -63,6 +67,8 @@ class Polynomial:
     def __ne__(self, other):
         return not (self == other)
 
+    def __repr__(self):
+        return "Polynomial({})".format(repr(self.coeffs))
     def __str__(self):
         result = []
         r_coeffs = self.coeffs[::-1]
